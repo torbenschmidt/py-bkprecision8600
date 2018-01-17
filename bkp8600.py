@@ -12,6 +12,7 @@ class Bkp8600(object):
                 tmpIntrument = usbtmc.Instrument(str(r))
                 if tmpIntrument.ask("*IDN?").startswith("B&K Precision, 8600"):
                     self.Instrument = tmpIntrument
+                    self.initialize()
                     break
 
     def getDescription(self):
@@ -52,7 +53,10 @@ class Bkp8600(object):
         self.Instrument.write("INPut OFF")
         self.Instrument.write("SYSTem:LOCal")
 
+#TODO Voltage mode
+
 if __name__ == '__main__':
+    import time
     #last = Bkp8600(resource="USB::65535::34816::602197010707610021::INSTR")
     last = Bkp8600()
     #print last.getDescription()
@@ -61,8 +65,14 @@ if __name__ == '__main__':
     #print last.measureVoltage()
     #print last.measureCurrent()
     #
-    last.initialize()
-    #last.setCurrent(1)
+    #last.initialize()
+    for n in range(0,200):
+        print "Set to:"+str(n/1000.0)
+        last.setCurrent(n/1000.0)
+        time.sleep(1)
+        print last.getCurrent()
+        print last.measureVoltage()
+        print last.measureCurrent()
     #print last.getError()
     #print last.getFunction()
     #last.setCurrent(1)
